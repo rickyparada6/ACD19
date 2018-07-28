@@ -15,6 +15,9 @@ guys can figure out how to auto-re-number in windows, that would be great (extra
 Also, can you add your nice notes from the readme in the "Primitive Master Sub....'s" repository 
 to this readme once the labs are renumbered.
 
+Also, also, track the commits on "ACD labs & solutions".  If I do something new there, reflect the changes in
+ACD19.
+
 txt me if you have any questions.
 
 Thx, great work!
