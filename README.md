@@ -13,7 +13,7 @@ system.  I know this is a pain in the ass, but it will really help me.  If you
 guys can figure out how to auto-re-number in windows, that would be great (extra credit!).
 
 Also, can you add your nice notes from the readme in the "Primitive Master Sub....'s" repository 
-and add them to this readme once they are renumbered.
+to this readme once the labs are renumbered.
 
 txt me if you have any questions.
 
