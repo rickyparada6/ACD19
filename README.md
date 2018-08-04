@@ -21,3 +21,8 @@ ACD19.
 txt me if you have any questions.
 
 Thx, great work!
+
+This repo has the majority of the jframe examples (excluding labs 24-26) and is up to date (July 31st).
+There is also another folder named File Name Manager that fixes the auto-renumbering issue.
+
+Check it out [here.](https://github.com/rickyparada6/ACD19/tree/Neato/File%20Name%20Manager)
