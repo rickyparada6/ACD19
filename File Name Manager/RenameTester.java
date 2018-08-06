@@ -10,7 +10,7 @@ public class RenameTester
 		String folder_path = "C:\\Users\\gneat\\Desktop\\testNum";
         // creating new folder
         File myfolder = new File(folder_path);
-		// Renamer.shiftFileOrder(myfolder, 20, 30);
+		Renamer.shiftFileOrder(myfolder, 2, 5);
 		// Renamer.renameFilesInBinary(myfolder);
 		// Renamer.renameFilesInBase10(myfolder);
 		System.out.println("Files have been changed");
