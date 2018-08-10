@@ -31,18 +31,11 @@ public class starter extends JPanel
 		
 		FontMetrics metrics = g.getFontMetrics(g.getFont());
 		
-		int maxWidth=0;
 		for(int i=0;i<word.length();i++)
 		{
 			int width = metrics.stringWidth(word.substring(i,i+1));
-			if(width>maxWidth)
-			{
-				maxWidth=width;
-			}
 			g.drawString(word.substring(i,i+1)+ ": "+width,50,50+i*20);
 		}
-		g.drawString("The max width is: "+maxWidth,100,50);
-		
 		
 	}
 
