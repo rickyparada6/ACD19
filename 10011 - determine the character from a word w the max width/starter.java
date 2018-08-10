@@ -6,7 +6,6 @@ import java.awt.event.*;
 public class starter extends JPanel
 {
 	static JFrame frame;
-	
 	String word;
 	
 	public static void main(String[] args) {
