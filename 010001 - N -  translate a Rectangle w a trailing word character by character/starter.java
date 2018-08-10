@@ -11,9 +11,10 @@ public class starter extends JPanel implements Runnable
 	Rectangle2D.Double rect;
 	int startPos=50;
 	int xCoord=startPos;
+	int counter=0;
+	int spacing=10;
 	String word;
-	FontMetrics metrics;
-	ArrayList<String> words = new ArrayList<String>();
+	ArrayList<String> letters = new ArrayList<String>();
 	
 	public static void main(String[] args) {
 		frame = new JFrame("App");
@@ -32,6 +33,7 @@ public class starter extends JPanel implements Runnable
 		System.out.print("Please enter a word: ");
 		EasyReader in = new EasyReader();
 		word = in.readWord();
+		System.out.print("Your word's length: " + word.length());
 		
 		Thread thread = new Thread(this);
 		thread.start();
@@ -47,18 +49,17 @@ public class starter extends JPanel implements Runnable
 		
 		String coords = "("+(int)rect.getX()+","+(int)rect.getY()+")";
 		g.drawString(coords,(int)rect.getX(),(int)rect.getY()-10);
+	
 		
-		metrics = g.getFontMetrics(g.getFont());
-		int width = metrics.stringWidth(word);
-		
-		if((rect.getX()-startPos)%width==0)
+		if((rect.getX()-startPos)%spacing==0&&counter<word.length())
 		{
-			words.add(word);
+			letters.add(word.substring(counter,counter+1));
+			counter++;
 		}
 		
-		for(int i=0;i<words.size();i++)
+		for(int i=0;i<letters.size();i++)
 		{
-			g.drawString(words.get(i),startPos+width*i,(int)rect.getY()+15);
+			g.drawString(letters.get(i),startPos+(i*spacing),(int)rect.getY()+15);
 		}
 		
 		Graphics2D g2 = (Graphics2D)g;
@@ -80,7 +81,5 @@ public class starter extends JPanel implements Runnable
 			catch (InterruptedException e) { }
 		}
 	}
-
-
 }
 
