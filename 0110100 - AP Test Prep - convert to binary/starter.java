@@ -30,7 +30,7 @@ class starter{
 			digits.set(digits.size() - (greatest + 1), 1);
 			c++;
 		}
-		return ArrayToInt(digits);
+		return ArrayToString(digits);
 	}
 	//gets greatest power of two less than or equal to number
 	private static int getGreatestPower(int number)
@@ -45,7 +45,7 @@ class starter{
 		return upperBound - 1;
 	}
 	//returns an int that is the combined digits of the array arr
-	private static String ArrayToInt(ArrayList<Integer> arr)
+	private static String ArrayToString(ArrayList<Integer> arr)
 	{
 		String nums = "";
 		for(int i=0; i<arr.size(); i++)

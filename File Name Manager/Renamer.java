@@ -8,17 +8,17 @@ public class Renamer
 	//precondition: files are numbered in base 10
 	public static void shiftFileOrder(File file, int start, int end)
 	{
-        checkLetters(file,"sfo", start, end);	
+        rename(file,"sfo", start, end);	
 	}
 	//precondition: files are numbered in binary
 	public static void renameFilesInBase10(File file)
 	{
-		checkLetters(file,"b10",0,0);
+		rename(file,"b10",0,0);
 	}
 	//precondition: files are numbered in base 10
 	public static void renameFilesInBinary(File file)
 	{
-		checkLetters(file,"bin",0,0);
+		rename(file,"bin",0,0);
 	}
 	private static boolean isBetween(int num, int low, int high)
 	{
@@ -61,7 +61,7 @@ public class Renamer
 			digits.set(digits.size() - (greatest + 1), 1);
 			c++;
 		}
-		return ArrayToInt(digits);
+		return ArrayToString(digits);
 	}
 	//gets greatest power of two less than or equal to number
 	private static int getGreatestPower(int number)
@@ -76,7 +76,7 @@ public class Renamer
 		return upperBound - 1;
 	}
 	//returns an int that is the combined digits of the array arr
-	private static String ArrayToInt(ArrayList<Integer> arr)
+	private static String ArrayToString(ArrayList<Integer> arr)
 	{
 		String nums = "";
 		for(int i=0; i<arr.size(); i++)
@@ -84,52 +84,48 @@ public class Renamer
 		return nums;
 	}
 	
-	private static void checkLetters(File file, String id, int start, int end)
+	private static void rename(File file, String id, int start, int end)
 	{
 		File[] ACD = file.listFiles();
         for (int i = 0; i < ACD.length; i++)
         {
             if (ACD[i].isDirectory() && !ACD[i].isHidden() && !ACD[i].getName().equals("File Name Manager"))
             {
-				int num=0;
+				String extra = "";
+				int num = 0;
 				File myfile = new File(file.getPath() + "\\" + ACD[i].getName());
-				String alp = "abcdefghijklmnopqrstuvwxyz";
-				String[] alpha = alp.split("");
-				
-				boolean extra=true;
-				for(int j=0;j<alpha.length;j++)
+				String alphabet = "abcdefghijklmnopqrstuvwxyz";
+				String[] letters = alphabet.split("");
+				boolean isExtraLab = true;
+				for(int j=0;j<letters.length;j++)
 				{
-					if(ACD[i].getName().indexOf(alpha[j]) < ACD[i].getName().indexOf(" ") && ACD[i].getName().indexOf(alpha[j]) != -1)
+					if(ACD[i].getName().indexOf(letters[j]) < ACD[i].getName().indexOf(" ") && ACD[i].getName().indexOf(letters[j]) != -1)
 					{	
-						num =  Integer.valueOf(ACD[i].getName().substring(0,ACD[i].getName().indexOf(alpha[j])));
+						num = Integer.valueOf(ACD[i].getName().substring(0,ACD[i].getName().indexOf(letters[j])));
+						extra = ACD[i].getName().substring(ACD[i].getName().indexOf(letters[j]), ACD[i].getName().indexOf(letters[j])+1);
 						break;
 					}
-					
-					if(j==alpha.length-1)
-					{
-						extra=false;
-					}
+					if(j == letters.length-1)
+						isExtraLab = false;
 				}
-				
-				if(!extra)
+				if(!isExtraLab)
 				{
-					num =  Integer.valueOf(ACD[i].getName().substring(0,ACD[i].getName().indexOf(" ")));
+					num = Integer.valueOf(ACD[i].getName().substring(0,ACD[i].getName().indexOf(" ")));
 				}
-					
 				switch(id){
 					case "sfo":
 						if(isBetween(num, start, end))
 							num++;
-						myfile.renameTo(new File(file.getPath() + "\\" + num + ACD[i].getName().substring(ACD[i].getName().indexOf(" "))));
+						myfile.renameTo(new File(file.getPath() + "\\" + num + extra + ACD[i].getName().substring(ACD[i].getName().indexOf(" "))));
 						break;
 					case "b10":
-						myfile.renameTo(new File(file.getPath() + "\\" + convertToBase10(num) + ACD[i].getName().substring(ACD[i].getName().indexOf(" "))));
+						myfile.renameTo(new File(file.getPath() + "\\" + convertToBase10(num) + extra + ACD[i].getName().substring(ACD[i].getName().indexOf(" "))));
 						break;
 					case "bin":
-						myfile.renameTo(new File(file.getPath() + "\\" + convertToBinary(num) + ACD[i].getName().substring(ACD[i].getName().indexOf(" "))));
+						myfile.renameTo(new File(file.getPath() + "\\" + convertToBinary(num) + extra + ACD[i].getName().substring(ACD[i].getName().indexOf(" "))));
 						break;
 					default:
-						System.out.print("Uh oh");
+						System.out.print("Unrecognized ID");
 						break;
 				}
 			}
