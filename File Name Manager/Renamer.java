@@ -8,61 +8,17 @@ public class Renamer
 	//precondition: files are numbered in base 10
 	public static void shiftFileOrder(File file, int start, int end)
 	{
-		File[] ACD = file.listFiles();
-        for (int i = 0; i < ACD.length; i++)
-        {
-            if (ACD[i].isDirectory() && !ACD[i].isHidden() && !ACD[i].getName().equals("File Name Manager"))
-            {
-                File myfile = new File(file.getPath() + "\\" + ACD[i].getName());
-				int num = 0;
-				//accounts for extra labs labeled with 'a'
-				if(ACD[i].getName().indexOf("a") < ACD[i].getName().indexOf(" ") && ACD[i].getName().indexOf("a") != -1)
-					num = Integer.valueOf(ACD[i].getName().substring(0,ACD[i].getName().indexOf("a")));
-				else
-					num = Integer.valueOf(ACD[i].getName().substring(0,ACD[i].getName().indexOf(" ")));
-				if(isBetween(convertToBase10(num), start, end))
-					num++;
-				myfile.renameTo(new File(file.getPath() + "\\" + num + ACD[i].getName().substring(ACD[i].getName().indexOf(" "))));
-            }
-        }
+        checkLetters(file,"sfo", start, end);	
 	}
 	//precondition: files are numbered in binary
 	public static void renameFilesInBase10(File file)
 	{
-		File[] ACD = file.listFiles();
-        for (int i = 0; i < ACD.length; i++)
-        {
-            if (ACD[i].isDirectory() && !ACD[i].isHidden() && !ACD[i].getName().equals("File Name Manager"))
-            {
-                File myfile = new File(file.getPath() + "\\" + ACD[i].getName());
-				int num = 0;
-				//accounts for extra labs labeled with 'a'
-				if(ACD[i].getName().indexOf("a") < ACD[i].getName().indexOf(" ") && ACD[i].getName().indexOf("a") != -1) 
-					num = Integer.valueOf(ACD[i].getName().substring(0,ACD[i].getName().indexOf("a")));
-				else
-					num = Integer.valueOf(ACD[i].getName().substring(0,ACD[i].getName().indexOf(" ")));
-				myfile.renameTo(new File(file.getPath() + "\\" + convertToBase10(num) + ACD[i].getName().substring(ACD[i].getName().indexOf(" "))));
-            }
-        }
+		checkLetters(file,"b10",0,0);
 	}
 	//precondition: files are numbered in base 10
 	public static void renameFilesInBinary(File file)
 	{
-		File[] ACD = file.listFiles();
-        for (int i = 0; i < ACD.length; i++)
-        {
-            if (ACD[i].isDirectory() && !ACD[i].isHidden() && !ACD[i].getName().equals("File Name Manager"))
-            {
-                File myfile = new File(file.getPath() + "\\" + ACD[i].getName());
-				int num = 0;
-				//accounts for extra labs labeled with 'a'
-				if(ACD[i].getName().indexOf("a") < ACD[i].getName().indexOf(" ") && ACD[i].getName().indexOf("a") != -1)
-					num = Integer.valueOf(ACD[i].getName().substring(0,ACD[i].getName().indexOf("a")));
-				else
-					num = Integer.valueOf(ACD[i].getName().substring(0,ACD[i].getName().indexOf(" ")));
-				myfile.renameTo(new File(file.getPath() + "\\" + convertToBinary(num) + ACD[i].getName().substring(ACD[i].getName().indexOf(" "))));
-            }
-        }
+		checkLetters(file,"bin",0,0);
 	}
 	private static boolean isBetween(int num, int low, int high)
 	{
@@ -85,7 +41,7 @@ public class Renamer
 	}
 	//number is positive
 	//conversion capped to numbers less than 2^8
-	private static int convertToBinary(int num)
+	private static String convertToBinary(int num)
 	{
 		ArrayList<Integer> digits = new ArrayList<Integer>();
 		int c = 0;
@@ -98,13 +54,11 @@ public class Renamer
 			//first iteration creates the array with the proper length
 			if(c == 0)
 			{
-				digits.add(1);
-				for(int i=0; i<greatest; i++)
+				for(int i=0; i<7; i++)
 					digits.add(0);
 			}
 			//other iterations simply set the correct 0's to 1's
-			else
-				digits.set(digits.size() - (greatest + 1), 1);
+			digits.set(digits.size() - (greatest + 1), 1);
 			c++;
 		}
 		return ArrayToInt(digits);
@@ -122,11 +76,63 @@ public class Renamer
 		return upperBound - 1;
 	}
 	//returns an int that is the combined digits of the array arr
-	private static int ArrayToInt(ArrayList<Integer> arr)
+	private static String ArrayToInt(ArrayList<Integer> arr)
 	{
 		String nums = "";
 		for(int i=0; i<arr.size(); i++)
 			nums += arr.get(i).toString();
-		return Integer.valueOf(nums);
+		return nums;
+	}
+	
+	private static void checkLetters(File file, String id, int start, int end)
+	{
+		File[] ACD = file.listFiles();
+        for (int i = 0; i < ACD.length; i++)
+        {
+            if (ACD[i].isDirectory() && !ACD[i].isHidden() && !ACD[i].getName().equals("File Name Manager"))
+            {
+				int num=0;
+				File myfile = new File(file.getPath() + "\\" + ACD[i].getName());
+				String alp = "abcdefghijklmnopqrstuvwxyz";
+				String[] alpha = alp.split("");
+				
+				boolean extra=true;
+				for(int j=0;j<alpha.length;j++)
+				{
+					if(ACD[i].getName().indexOf(alpha[j]) < ACD[i].getName().indexOf(" ") && ACD[i].getName().indexOf(alpha[j]) != -1)
+					{	
+						num =  Integer.valueOf(ACD[i].getName().substring(0,ACD[i].getName().indexOf(alpha[j])));
+						break;
+					}
+					
+					if(j==alpha.length-1)
+					{
+						extra=false;
+					}
+				}
+				
+				if(!extra)
+				{
+					num =  Integer.valueOf(ACD[i].getName().substring(0,ACD[i].getName().indexOf(" ")));
+				}
+					
+				switch(id){
+					case "sfo":
+						if(isBetween(num, start, end))
+							num++;
+						myfile.renameTo(new File(file.getPath() + "\\" + num + ACD[i].getName().substring(ACD[i].getName().indexOf(" "))));
+						break;
+					case "b10":
+						myfile.renameTo(new File(file.getPath() + "\\" + convertToBase10(num) + ACD[i].getName().substring(ACD[i].getName().indexOf(" "))));
+						break;
+					case "bin":
+						myfile.renameTo(new File(file.getPath() + "\\" + convertToBinary(num) + ACD[i].getName().substring(ACD[i].getName().indexOf(" "))));
+						break;
+					default:
+						System.out.print("Uh oh");
+						break;
+				}
+			}
+		}	
 	}
 }
