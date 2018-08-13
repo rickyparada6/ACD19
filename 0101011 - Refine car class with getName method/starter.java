@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class starter extends JPanel implements Runnable
 {
@@ -29,6 +30,7 @@ public class starter extends JPanel implements Runnable
 		makeRoads();
 		cars = new Car[100];
 		makeCars();
+		countNames(cars);
 		
 		Thread thread = new Thread(this);
 		//calls the run function
@@ -53,7 +55,36 @@ public class starter extends JPanel implements Runnable
 			cars[i] = new Car(-i*CAR_WIDTH,roads[(int)(Math.random()*roads.length)].getY()-10,name,color,2);
 		}
 	}
-	
+	public void countNames(Car[] vehicles)
+	{
+		String[] allNames = new String[vehicles.length];
+		for(int i=0; i<vehicles.length; i++)
+			allNames[i] = vehicles[i].getName();
+		ArrayList<String> names = new ArrayList<String>();
+		ArrayList<Integer> duplicates = new ArrayList<Integer>();
+		for(int i=0; i<allNames.length; i++)
+		{
+			boolean isOriginal = true;
+			int duplicateIndex = -1;
+			for(int j=0; j<names.size(); j++)
+			{
+				if(allNames[i].equals(names.get(j)))
+				{
+					isOriginal = false;
+					duplicateIndex = j;
+				}
+			}
+			if(isOriginal)
+			{
+				names.add(allNames[i]);
+				duplicates.add(1);
+			}
+			else
+				duplicates.set(duplicateIndex, duplicates.get(duplicateIndex)+1);
+		}
+		for(int i=0; i<names.size(); i++)
+			System.out.println("There are "+duplicates.get(i)+" cars named "+names.get(i));
+	}
 	//called by repaint
 	public void paintComponent(Graphics g)
 	{
